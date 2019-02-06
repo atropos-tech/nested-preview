@@ -8,7 +8,8 @@ const NestedPreview = createReactClass({
     propTypes: {
         value: array.isRequired,
         onChange: func.isRequired,
-        getSuggestedSections: func.isRequired
+        getSuggestedSections: func.isRequired,
+        fetchSectionRows: func.isRequired
     },
     getInitialState() {
         return { expandedSectionId: false, isPickerFocused: true };
@@ -28,7 +29,33 @@ const NestedPreview = createReactClass({
         const { value, onChange } = this.props;
         const newValue = [...value, sectionToAdd];
         onChange(newValue);
+        this.loadRows(sectionToAdd);
         this.setState({ isPickerFocused: false, expandedSectionId: sectionToAdd.id });
+    },
+    loadRows(sectionToLoad) {
+        if (!sectionToLoad.rows) {
+            const { fetchSectionRows } = this.props;
+            fetchSectionRows(sectionToLoad).then(rows => {
+                const newSection = {
+                    ...sectionToLoad,
+                    rows
+                };
+                return this.handleSectionChange(newSection);
+            }).catch(error => {
+                //what now?
+                console.error(error);
+            });
+        }
+    },
+    handleSectionChange(updatedSection) {
+        const { value, onChange } = this.props;
+        const newValue = value.map(section => {
+            if (section.id === updatedSection.id) {
+                return updatedSection;
+            }
+            return section;
+        });
+        onChange(newValue);
     },
     handleSwitchToPicker() {
         this.setState({ isPickerFocused: true, expandedSectionId: false });
@@ -56,6 +83,7 @@ const NestedPreview = createReactClass({
                                 onExpand={ this.handleSectionExpand }
                                 onCollapse={ this.handleSectionCollapse }
                                 onRemove={ this.handleSectionRemove }
+                                onChangeSection={ this.handleSectionChange }
                             />
                         )
                     )

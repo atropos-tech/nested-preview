@@ -62,6 +62,9 @@
       "enzymeAdapter": "react15.4"
     },
     "collectCoverage": true,
-    "collectCoverageFrom": [ "src/**/*.js", "!src/sandbox.js" ]    
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/sandbox.js"
+    ]
   }
 }
