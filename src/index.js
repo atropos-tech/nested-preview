@@ -1,5 +1,5 @@
 import React from "react";
-import { func, array } from "prop-types";
+import { func, array, bool } from "prop-types";
 import createReactClass from "create-react-class";
 import PickerOrButton from "./PickerOrButton";
 import PreviewSection from "./PreviewSection";
@@ -9,7 +9,8 @@ const NestedPreview = createReactClass({
         value: array.isRequired,
         onChange: func.isRequired,
         getSuggestedSections: func.isRequired,
-        fetchSectionRows: func.isRequired
+        fetchSectionRows: func.isRequired,
+        fullWidth: bool
     },
     getInitialState() {
         return { expandedSectionId: false, isPickerFocused: true };
@@ -69,7 +70,7 @@ const NestedPreview = createReactClass({
         return (value.length === 0) || isPickerFocused;
     },
     render() {
-        const { value, getSuggestedSections } = this.props;
+        const { value, getSuggestedSections, fullWidth } = this.props;
         const { expandedSectionId } = this.state;
         return (
             <div>
@@ -95,6 +96,7 @@ const NestedPreview = createReactClass({
                     isPicker={ this.isPickerMode() }
                     onSwitchToPicker={ this.handleSwitchToPicker }
                     onPickerBlur={ this.handlePickerBlur }
+                    fullWidth={ fullWidth }
                 />
             </div>
         );

@@ -48,7 +48,7 @@ const Picker = createReactClass({
             >
                 {
                     ({ getInputProps, ...dropdownProps }) => (
-                        <div>
+                        <div style={ { position: "relative" } }>
                             <PickerInput
                                 { ...getInputProps({ onChange: this.handleInputChange }) }
                                 fullWidth={ fullWidth }

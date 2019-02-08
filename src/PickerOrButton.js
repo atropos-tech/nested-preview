@@ -3,7 +3,7 @@ import Picker from "./Picker";
 import { Button } from "material-ui";
 import { func, bool, array } from "prop-types";
 
-function PickerOrButton({ isPicker, onPick, selectedSections, onPickerBlur, onSwitchToPicker, getSuggestedSections }) {
+function PickerOrButton({ isPicker, onPick, selectedSections, onPickerBlur, onSwitchToPicker, getSuggestedSections, fullWidth }) {
     if (isPicker) {
         return (
             <Picker
@@ -11,11 +11,16 @@ function PickerOrButton({ isPicker, onPick, selectedSections, onPickerBlur, onSw
                 selectedItems={ selectedSections }
                 onPick={ onPick }
                 onBlur={ onPickerBlur }
+                fullWidth={ fullWidth }
                 focusOnMount
             />
         );
     }
-    return <Button onClick={ onSwitchToPicker }>Add another fruit</Button>;
+    return (
+        <div style={ { display: "flex", justifyContent: "center", paddingTop: "8px" } }>
+            <Button variant="raised" onClick={ onSwitchToPicker }>Add another fruit</Button>
+        </div>
+    );
 }
 
 PickerOrButton.propTypes = {
@@ -24,7 +29,8 @@ PickerOrButton.propTypes = {
     selectedSections: array.isRequired,
     onPickerBlur: func,
     onSwitchToPicker: func,
-    getSuggestedSections: func.isRequired
+    getSuggestedSections: func.isRequired,
+    fullWidth: bool
 };
 
 export default PickerOrButton;

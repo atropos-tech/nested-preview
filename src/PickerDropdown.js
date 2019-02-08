@@ -6,7 +6,7 @@ function PickerDropdown({ isOpen, inputValue, highlightedIndex, selectedItems, g
     if ( isOpen ) {
         const visibleItems = getSuggestedItems(inputValue, selectedItems);
         return (
-            <Paper square style={{ position: "absolute", zIndex: 100 }}>
+            <Paper square style={{ position: "absolute", width: "100%", zIndex: 100 }}>
                 {
                     visibleItems.map((item, index) => {
                         const itemProps = getItemProps({

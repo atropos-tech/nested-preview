@@ -75,6 +75,7 @@ const Sandbox = createReactClass({
                             onChange={ this.handleSelectedItemsChange }
                             getSuggestedSections={ getSuggestedSections }
                             fetchSectionRows={ fetchRows }
+                            fullWidth
                         />
                     </div>
                 </section>
