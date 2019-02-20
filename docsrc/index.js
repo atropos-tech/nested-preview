@@ -1,7 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import { render } from "react-dom";
-import NestedPreview from "./index";
+import NestedPreview from "../src/index";
 import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
 import { blue, red } from "material-ui/colors";
 import createUniqueId from "uuid-v4";
@@ -84,4 +84,4 @@ const Sandbox = createReactClass({
     }
 });
 
-render(<Sandbox />, document.getElementById("sandbox"));
+render(<Sandbox />, document.getElementById("docs"));

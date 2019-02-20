@@ -1,13 +1,15 @@
 /* eslint-env node */
+/* eslint-disable import/no-commonjs */
+/* eslint-disable import/no-nodejs-modules */
 
-const { join } = require('path');
+const { join } = require("path");
 
 module.exports = {
-    entry: "./src/sandbox.js",
+    entry: "./docsrc/index.js",
     devtool: "inline-cheap-source-map",
     output: {
-        path: join(__dirname, "dist"),
-        filename: "sandbox-bundle.js"
+        path: join(__dirname, "docs"),
+        filename: "docs-bundle.js"
     },
     module: {
         rules: [
@@ -15,7 +17,7 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: "babel-loader",                    
+                    loader: "babel-loader",
                 }
             }
         ]
