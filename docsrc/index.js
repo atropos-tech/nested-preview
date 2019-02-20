@@ -132,7 +132,7 @@ const Docs = createReactClass({
                                         return (
                                             <ContainerDimensions>
                                                 {
-                                                    ({ width }) => <VirtualTable rows={ loadedRows } columns={ FRUIT_COLUMNS } height={ 300 } width={ width } />
+                                                    ({ width }) => <VirtualTable selectable rows={ loadedRows } columns={ FRUIT_COLUMNS } height={ 300 } width={ width } />
                                                 }
                                             </ContainerDimensions>
                                         );

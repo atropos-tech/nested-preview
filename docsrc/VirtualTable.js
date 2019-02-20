@@ -3,13 +3,13 @@ import createReactClass from "create-react-class";
 import { Column, Table } from "react-virtualized";
 import Draggable from "react-draggable";
 import "style-loader!css-loader!react-virtualized/styles.css";
-import { Typography } from "material-ui";
+import { Typography, Checkbox } from "material-ui";
 
 const COLUMN_ROW_INDEX = -1;
 const ROW_HEIGHT_IN_PIXELS = 36;
 
 function sum(numbers) {
-    return numbers.reduce((a, b) => a + b, 0);
+    return numbers.reduce((a = 0, b = 0) => a + b, 0);
 }
 
 function getRowStyle({ index }) {
@@ -19,6 +19,21 @@ function getRowStyle({ index }) {
     if (index % 2) {
         return { backgroundColor: "#eee" };
     }
+}
+
+function getSelectionColumn(onRowSelect) {
+
+    function TickyBoxCell({ cellData, rowData }) {
+        return <Checkbox checked={ cellData } onChange={ event => onRowSelect(rowData, event.target.checked) } color="primary" />;
+    }
+
+    return {
+        label: "__tickybox__",
+        isSelectionColumn: true,
+        rowToData: ({ rowData }) => rowData.isTicked,
+        CellComponent: TickyBoxCell,
+        fixedWidth: 60        
+    };
 }
 
 function getInitialColumnWidths(columns) {
@@ -33,14 +48,21 @@ function getInitialColumnWidths(columns) {
 const VirtualTable = createReactClass({
     getInitialState() {
         return {
-            widths: getInitialColumnWidths(this.props.columns)
+            widths: getInitialColumnWidths(this.getColumnsToRender())
         };
+    },
+
+    getColumnsToRender() {
+        const { columns, selectable, onRowSelect } = this.props;
+        if ( selectable ) {
+            return [ getSelectionColumn(onRowSelect), ...columns ];
+        }
+        return columns;
     },
 
     render() {
         const { rows, columns, width, height } = this.props;
-        const { widths } = this.state;
-
+        
         return (
             <Table
                 width={width}
@@ -52,16 +74,19 @@ const VirtualTable = createReactClass({
                 rowStyle={ getRowStyle }
             >
                 {
-                    columns.map(column =>
+                    this.getColumnsToRender().map(column =>
                         (
                             <Column
+                                columnData={ column }
                                 headerRenderer={this.headerRenderer}
                                 cellRenderer={ column.CellComponent }
                                 key={ column.label }
                                 dataKey={ column.label }
                                 cellDataGetter={ column.rowToData }
                                 label={ column.label }
-                                width={ widths[column.label] * width }
+                                width={ this.getColumnWidth(column) }
+                                flexGrow={ column.fixedWidth ? 0 : 1 }
+                                flexShrink={ column.fixedWidth ? 0 : 1 }
                             />
                         )
                     )
@@ -70,7 +95,27 @@ const VirtualTable = createReactClass({
         );
     },
 
-    headerRenderer({ dataKey, label }) {
+    getColumnWidth(column) {
+        const { width } = this.props;
+        const { widths } = this.state;
+        if ( column.fixedWidth ) {
+            console.log(column.fixedWidth);
+            return column.fixedWidth;
+        }
+        console.log(widths, column.label, widths[column.label], width);
+        return widths[column.label] * width;
+    },
+
+    handleAllCheck(checkEvent) {
+        console.log("ALL CHECK", checkEvent);
+    },
+
+    headerRenderer({ dataKey, label, columnData }) {        
+        if ( columnData.isSelectionColumn ) {
+            return (
+                <Checkbox checked={ false } onChange={ this.handleAllCheck } />
+            );
+        }
         return (
             <div key={ dataKey } style={ { display: "flex", justifyContent: "space-between" } }>
                 <Typography component="span" style={ { fontWeight: "bold" } } className="ReactVirtualized__Table__headerTruncatedText">
