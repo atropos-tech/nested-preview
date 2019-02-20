@@ -1,5 +1,5 @@
 import React from "react";
-import { func, array, bool } from "prop-types";
+import { func, array, bool, string } from "prop-types";
 import createReactClass from "create-react-class";
 import PickerOrButton from "./PickerOrButton";
 import PreviewSection from "./PreviewSection";
@@ -9,8 +9,11 @@ const NestedPreview = createReactClass({
         value: array.isRequired,
         onChange: func.isRequired,
         getSuggestedSections: func.isRequired,
-        fetchSectionRows: func.isRequired,
-        fullWidth: bool
+        fullWidth: bool,
+        addButtonLabel: string.isRequired,
+        typeaheadLabel: string,
+        itemToPreviewHeader: func,
+        children: func.isRequired
     },
     getInitialState() {
         return { expandedSectionId: false, isPickerFocused: true };
@@ -30,23 +33,7 @@ const NestedPreview = createReactClass({
         const { value, onChange } = this.props;
         const newValue = [...value, sectionToAdd];
         onChange(newValue);
-        this.loadRows(sectionToAdd);
         this.setState({ isPickerFocused: false, expandedSectionId: sectionToAdd.id });
-    },
-    loadRows(sectionToLoad) {
-        if (!sectionToLoad.rows) {
-            const { fetchSectionRows } = this.props;
-            fetchSectionRows(sectionToLoad).then(rows => {
-                const newSection = {
-                    ...sectionToLoad,
-                    rows
-                };
-                return this.handleSectionChange(newSection);
-            }).catch(error => {
-                //what now?
-                console.error(error);
-            });
-        }
     },
     handleSectionChange(updatedSection) {
         const { value, onChange } = this.props;
@@ -70,7 +57,7 @@ const NestedPreview = createReactClass({
         return (value.length === 0) || isPickerFocused;
     },
     render() {
-        const { value, getSuggestedSections, fullWidth } = this.props;
+        const { value, getSuggestedSections, fullWidth, addButtonLabel, typeaheadLabel, itemToPreviewHeader, children } = this.props;
         const { expandedSectionId } = this.state;
         return (
             <div>
@@ -85,6 +72,8 @@ const NestedPreview = createReactClass({
                                 onCollapse={ this.handleSectionCollapse }
                                 onRemove={ this.handleSectionRemove }
                                 onChangeSection={ this.handleSectionChange }
+                                renderPreview={ children }
+                                label={ itemToPreviewHeader(section) }
                             />
                         )
                     )
@@ -97,6 +86,8 @@ const NestedPreview = createReactClass({
                     onSwitchToPicker={ this.handleSwitchToPicker }
                     onPickerBlur={ this.handlePickerBlur }
                     fullWidth={ fullWidth }
+                    addButtonLabel={ addButtonLabel }
+                    typeaheadLabel={ typeaheadLabel }
                 />
             </div>
         );

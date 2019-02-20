@@ -3,7 +3,7 @@ import createReactClass from "create-react-class";
 import Downshift from "downshift";
 import PickerInput from "./PickerInput";
 import PickerDropdown from "./PickerDropdown";
-import { func, bool, array } from "prop-types";
+import { func, bool, array, string } from "prop-types";
 
 function itemToString(item) {
     return item.id;
@@ -16,7 +16,8 @@ const Picker = createReactClass({
         getSuggestedItems: func.isRequired,
         fullWidth: bool,
         focusOnMount: bool,
-        selectedItems: array.isRequired
+        selectedItems: array.isRequired,
+        label: string
     },
     componentDidMount() {
         if (this.props.focusOnMount) {
@@ -39,11 +40,11 @@ const Picker = createReactClass({
     },
     render() {
         const { inputValue } = this.state;
-        const { fullWidth, getSuggestedItems, onBlur, selectedItems } = this.props;
+        const { fullWidth, getSuggestedItems, onBlur, selectedItems, label } = this.props;
         return (
             <Downshift
                 inputValue={ inputValue }
-                onChange={ this.handlePickItem }
+                onSelect={ this.handlePickItem }
                 itemToString={ itemToString }
             >
                 {
@@ -54,6 +55,7 @@ const Picker = createReactClass({
                                 fullWidth={ fullWidth }
                                 onBlur={ onBlur }
                                 inputRef={ this.captureInputRef }
+                                label={ label }
                             />
                             <PickerDropdown
                                 itemToString={ itemToString }

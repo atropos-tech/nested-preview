@@ -34,7 +34,6 @@
         "max-depth": ["error", { "max": 4 }],
         "max-len": ["error", { "code": 180 }],
         "max-lines": ["error", { "max": 300 }],
-        "max-lines-per-function": ["error", { "max": 30 }],
         "max-nested-callbacks": ["error", { "max": 4 }],
         "max-params": ["error", { "max": 8 }],
         "max-statements-per-line": "error",
@@ -43,6 +42,7 @@
         "no-bitwise": "error",
         "no-caller": "error",
         "no-confusing-arrow": "error",
+        "no-console": ["error", { "allow": ["warn", "error"] }],
         "no-continue": "error",
         "no-empty-function": "error",
         "no-eval": "error",
@@ -124,7 +124,8 @@
         "react/no-this-in-sfc": "error",
         "react/no-unused-prop-types": "error",
         "react/void-dom-elements-no-children": "error",
-        "react/jsx-no-target-blank": "error"
+        "react/jsx-no-target-blank": "error",
 
+        "promise/always-return": "off"
     }
 }

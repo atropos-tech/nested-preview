@@ -1,9 +1,9 @@
 import React from "react";
 import Picker from "./Picker";
 import { Button } from "material-ui";
-import { func, bool, array } from "prop-types";
+import { func, bool, array, string } from "prop-types";
 
-function PickerOrButton({ isPicker, onPick, selectedSections, onPickerBlur, onSwitchToPicker, getSuggestedSections, fullWidth }) {
+function PickerOrButton({ isPicker, addButtonLabel, typeaheadLabel, onPick, selectedSections, onPickerBlur, onSwitchToPicker, getSuggestedSections, fullWidth }) {
     if (isPicker) {
         return (
             <Picker
@@ -12,19 +12,22 @@ function PickerOrButton({ isPicker, onPick, selectedSections, onPickerBlur, onSw
                 onPick={ onPick }
                 onBlur={ onPickerBlur }
                 fullWidth={ fullWidth }
+                label={ typeaheadLabel }
                 focusOnMount
             />
         );
     }
     return (
         <div style={ { display: "flex", justifyContent: "center", paddingTop: "8px" } }>
-            <Button variant="raised" onClick={ onSwitchToPicker }>Add another fruit</Button>
+            <Button variant="raised" onClick={ onSwitchToPicker }>{ addButtonLabel }</Button>
         </div>
     );
 }
 
 PickerOrButton.propTypes = {
     isPicker: bool,
+    typeaheadLabel: string,
+    addButtonLabel: string.isRequired,
     onPick: func.isRequired,
     selectedSections: array.isRequired,
     onPickerBlur: func,

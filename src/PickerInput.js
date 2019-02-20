@@ -2,11 +2,10 @@ import React from "react";
 import { func, string, bool, object } from "prop-types";
 import { TextField } from "material-ui";
 
-function PickerInput({ value, onChange, onBlur, inputRef, fullWidth, ...otherProps }) {
+function PickerInput({ value, label, onChange, onBlur, inputRef, fullWidth, ...otherProps }) {
     const InputProps = {
         inputProps: {
-            ...otherProps,
-            onBlur
+            ...otherProps
         },
         inputRef
     };
@@ -14,9 +13,10 @@ function PickerInput({ value, onChange, onBlur, inputRef, fullWidth, ...otherPro
     return (
         <TextField
             fullWidth={ fullWidth }
-            label='Your favourite fruit'
+            label={ label }
             value={ value }
             onChange={ onChange }
+            onBlur={ onBlur }
             InputProps={ InputProps }
         />
     );
@@ -28,7 +28,8 @@ PickerInput.propTypes = {
     onBlur: func,
     inputRef: func,
     fullWidth: bool,
-    classes: object
+    classes: object,
+    label: string
 };
 
 PickerInput.defaultProps = {
