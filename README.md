@@ -12,8 +12,34 @@ Nested Preview component, uses React 15, material-ui 1, and downshift.
 # Usage
 Install with `npm install nested-preview` or `yarn add nested-preview`.
 
-```javascript
+```jsx
+import React from 'react';
+import NestedPreview from 'nested-preview';
 
+const FRUIT = [
+    { id: "apple" }, { id: "banana" }, { id: "pear" }
+]
 
+function FruitPicker({ value, onChange }) {
+    return <NestedPreview
+        value={ value }
+        onChange={ onChange }
+        getSuggestedSections={ inputValue => FRUIT.filter(fruit => fruit.id.toLowerCase().includes(inputValue.toLowerCase()))  }
+        addButtonLabel="Add another fruit"
+        typeaheadLabel="Your favourite fruit"
+        itemToPreviewHeader={ section => `Details for "${section.id}"` }
+    />;
+}
 ```
+
+# Props
+
+| Prop name | Type | Required? | Description |
+| --------- | ---- | --------- | ----------- |
+| `value`   | array | yes | The items that have been picked - a Preview will be displayed for each. |
+| `onChange`   | function | yes | Triggers when the user adds or removed an item, either using the typeahead, or by removing a preview. |
+| `getSuggestedSections`   | function | yes | Triggers when the user adds or removed an item, either using the typeahead, or by removing a preview. |
+| `addButtonLabel` | string | yes | The label text for the button that appears when users can choose to select another item |
+| `typeaheadLabel` | string | yes | The label text for the typeahead control |
+| `itemToPreviewHeader` | function | yes | The title that appears in the preview header for an item |
 
