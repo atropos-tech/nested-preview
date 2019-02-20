@@ -30,7 +30,7 @@ function getSelectionColumn(onRowSelect) {
     return {
         label: "__tickybox__",
         isSelectionColumn: true,
-        rowToData: ({ rowData }) => rowData.isTicked,
+        rowToData: ({ rowData }) => rowData.isSelected,
         CellComponent: TickyBoxCell,
         fixedWidth: 60        
     };
@@ -62,7 +62,7 @@ const VirtualTable = createReactClass({
 
     render() {
         const { rows, columns, width, height } = this.props;
-        
+
         return (
             <Table
                 width={width}
@@ -96,24 +96,18 @@ const VirtualTable = createReactClass({
     },
 
     getColumnWidth(column) {
-        const { width } = this.props;
+        const { width, onSelectAll } = this.props;
         const { widths } = this.state;
         if ( column.fixedWidth ) {
-            console.log(column.fixedWidth);
             return column.fixedWidth;
         }
-        console.log(widths, column.label, widths[column.label], width);
         return widths[column.label] * width;
-    },
-
-    handleAllCheck(checkEvent) {
-        console.log("ALL CHECK", checkEvent);
     },
 
     headerRenderer({ dataKey, label, columnData }) {        
         if ( columnData.isSelectionColumn ) {
             return (
-                <Checkbox checked={ false } onChange={ this.handleAllCheck } />
+                <Checkbox checked={ false } onChange={ event => this.props.onSelectAll(event.target.checked) } />
             );
         }
         return (

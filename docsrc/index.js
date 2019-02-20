@@ -92,7 +92,7 @@ const sandboxTheme = createMuiTheme({
 
 const Docs = createReactClass({
     getInitialState() {
-        return { selectedItems: [], sectionRows: {} };
+        return { selectedItems: [], sectionRows: {}, tickedRows: {} };
     },
     handleSelectedItemsChange(selectedItems) {
         this.setState({ selectedItems });
@@ -108,6 +108,36 @@ const Docs = createReactClass({
                 console.error(error);
             });
         }
+    },
+    handleRowSelect(section, row, checked) {
+        this.setState(oldState => {
+            const sectionTicks = { ...oldState.tickedRows[section.id], [row.id]: checked };
+            return { ...oldState.tickedRows, [section.id]: sectionTicks };
+        });
+    },
+    handleSelectAll(section, checked) {
+        this.setState(oldState => {
+            if (checked) {
+                const allRowIds = oldState.sectionRows[section.id].map(row => row.id);
+                const sectionTicks = {};
+                allRowIds.forEach(rowId => {
+                    sectionTicks[rowId] = true;
+                });
+                return {
+                    tickedRows: { ...oldState.tickedRows, [section.id]: sectionTicks }
+                };                
+            }
+            return {
+                tickedRows: { ...oldState.tickedRows, [section.id]: {} }
+            };
+        });
+    },
+    getRowWithTick(section, row) {
+        const sectionTicks = this.state.tickedRows[section.id] || {}
+        return {
+            ...row,
+            isSelected: sectionTicks[row.id]
+        };
     },
     render() {
         const { selectedItems, sectionRows } = this.state;
@@ -132,7 +162,15 @@ const Docs = createReactClass({
                                         return (
                                             <ContainerDimensions>
                                                 {
-                                                    ({ width }) => <VirtualTable selectable rows={ loadedRows } columns={ FRUIT_COLUMNS } height={ 300 } width={ width } />
+                                                    ({ width }) => <VirtualTable
+                                                        selectable
+                                                        rows={ loadedRows.map(row => this.getRowWithTick(section, row)) }
+                                                        columns={ FRUIT_COLUMNS }
+                                                        height={ 300 }
+                                                        width={ width }
+                                                        onRowSelect={ (row, checked) => this.handleRowSelect(section, row, checked) }
+                                                        onSelectAll={ checked => this.handleSelectAll(section, checked) }
+                                                    />
                                                 }
                                             </ContainerDimensions>
                                         );
